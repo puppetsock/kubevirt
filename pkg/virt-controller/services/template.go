@@ -566,6 +566,28 @@ func (t *templateService) renderLaunchManifest(vmi *v1.VirtualMachineInstance, i
 		},
 	})
 
+	// inject multus annotations into pod via downward api
+	volumeMounts = append(volumeMounts, k8sv1.VolumeMount{
+		Name:      "multus-info",
+		MountPath: "/var/run/multus-info",
+		ReadOnly:  true,
+	})
+	volumes = append(volumes, k8sv1.Volume{
+		Name: "multus-info",
+		VolumeSource: k8sv1.VolumeSource{
+			DownwardAPI: &k8sv1.DownwardAPIVolumeSource{
+				Items: []k8sv1.DownwardAPIVolumeFile{
+					{
+						Path: "multus.json",
+						FieldRef: &k8sv1.ObjectFieldSelector{
+							FieldPath: "metadata.annotations['k8s.v1.cni.cncf.io/networks-status']",
+						},
+					},
+				},
+			},
+		},
+	})
+
 	serviceAccountName := ""
 
 	for _, volume := range vmi.Spec.Volumes {

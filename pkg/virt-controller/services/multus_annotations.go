@@ -89,7 +89,7 @@ func newMultusAnnotationData(vmi *v1.VirtualMachineInstance, network v1.Network,
 		multusIfaceMac = multusIface.MacAddress
 	}
 	return multusNetworkAnnotation{
-		InterfaceName: podInterfaceName,
+		InterfaceName: network.Name,
 		Mac:           multusIfaceMac,
 		Namespace:     namespace,
 		NetworkName:   networkName,

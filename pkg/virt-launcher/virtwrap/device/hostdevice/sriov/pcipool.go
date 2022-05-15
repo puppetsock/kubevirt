@@ -76,7 +76,8 @@ func (p *PCIAddressPool) Pop(networkName string) (string, error) {
 		return "", fmt.Errorf("resource for SR-IOV network %s does not exist", networkName)
 	}
 
-	pciAddress, err := p.pool.Pop(resource)
+	// pciAddress, err := p.pool.Pop(resource)
+	pciAddress, err := p.pool.Pop(resource + "|" + networkName)
 	if err != nil {
 		return "", fmt.Errorf("failed to allocate SR-IOV PCI address for network %s: %v", networkName, err)
 	}
